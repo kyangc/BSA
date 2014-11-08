@@ -3,6 +3,9 @@ using System.Windows.Media.Animation;
 
 namespace BSASimulator
 {
+    /// <summary>
+    /// Author Chengkangyang @8/11/14 
+    /// </summary>
     internal class Option
     {
         public enum BaseStationIntensity

@@ -5,7 +5,10 @@ using System.Windows.Media.Animation;
 using System.Xml.Serialization;
 
 namespace BSASimulator
-{
+{   
+    /// <summary>
+    /// Author Chengkangyang @8/11/14 
+    /// </summary>
     internal class Utils
     {
         /// <summary>

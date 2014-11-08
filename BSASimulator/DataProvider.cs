@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace BSASimulator
 {
+    /// <summary>
+    /// Author Chengkangyang @8/11/14 
+    /// </summary>
     internal class DataProvider
     {
 
