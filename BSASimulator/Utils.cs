@@ -21,14 +21,15 @@ namespace BSASimulator
         }
 
         /// <summary>
-        /// Get biased angle, the new angle is made +-20 degree of origin angel
+        /// Get biased angle, the new angle is made a variable bias (-5 ~ +10) 
+        /// degree of origin angel
         /// </summary>
         /// <param name="angle"></param>
         /// <returns></returns>
         public static double GetBiasedAngle(double angle)
         {
             var random = new Random(Guid.NewGuid().GetHashCode());
-            double bias = (random.NextDouble() * 2 - 1) * 20;
+            double bias = (random.NextDouble() * 3 - 1) * 5;
             return angle + bias;
         }
 
@@ -102,10 +103,11 @@ namespace BSASimulator
         /// <param name="y"></param>
         /// <param name="bsX"></param>
         /// <param name="bsY"></param>
+        /// <param name="height"></param>
         /// <returns></returns>
-        public static double GetAoa(double x, double y, double bsX, double bsY)
+        public static double GetAoa(double x, double y, double bsX, double bsY, double height)
         {
-            double distance = GetDistanceBetween(x, y, bsX, bsY);
+            double distance = Math.Sqrt(Math.Pow(GetDistanceBetween(x, y, bsX, bsY), 2) + Math.Pow(height, 2));
             if ((int)distance == 0) return 0;
             double cosTheta = (x - bsX) / distance;
             return Math.Acos(cosTheta) * 180 / Math.PI;

@@ -24,3 +24,16 @@ E:\Documents\GitHub\BSASimulator\BSASimulator\obj\Debug\BSASimulator_MarkupCompi
 E:\Documents\GitHub\BSASimulator\BSASimulator\obj\Debug\BSASimulator.g.resources
 E:\Documents\GitHub\BSASimulator\BSASimulator\obj\Debug\BSASimulator.Properties.Resources.resources
 E:\Documents\GitHub\BSASimulator\BSASimulator\obj\Debug\BSASimulator.csproj.GenerateResource.Cache
+E:\Documents\GitHub2\BSASimulator\bin\Debug\BSASimulator.exe.config
+E:\Documents\GitHub2\BSASimulator\obj\Debug\BSASimulator.exe
+E:\Documents\GitHub2\BSASimulator\obj\Debug\BSASimulator.pdb
+E:\Documents\GitHub2\BSASimulator\bin\Debug\BSASimulator.exe
+E:\Documents\GitHub2\BSASimulator\bin\Debug\BSASimulator.pdb
+E:\Documents\GitHub2\BSASimulator\obj\Debug\BSASimulator.csprojResolveAssemblyReference.cache
+E:\Documents\GitHub2\BSASimulator\obj\Debug\MainWindow.baml
+E:\Documents\GitHub2\BSASimulator\obj\Debug\MainWindow.g.cs
+E:\Documents\GitHub2\BSASimulator\obj\Debug\App.g.cs
+E:\Documents\GitHub2\BSASimulator\obj\Debug\BSASimulator_MarkupCompile.cache
+E:\Documents\GitHub2\BSASimulator\obj\Debug\BSASimulator.g.resources
+E:\Documents\GitHub2\BSASimulator\obj\Debug\BSASimulator.Properties.Resources.resources
+E:\Documents\GitHub2\BSASimulator\obj\Debug\BSASimulator.csproj.GenerateResource.Cache

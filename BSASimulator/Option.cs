@@ -23,16 +23,18 @@ namespace BSASimulator
         public enum SystemType
         {
             CDMA2000 = 0,
+            WCDMA = 1
         }
 
         private SimulationType _simulationType;
         private BaseStationIntensity _baseStationIntensity;
         private SystemType _systemType;
+
+        private double _height;
         private double _mapHeight;
         private double _mapWidth;
         private double _startX, _startY;
         private double _initDirection;
-        private double _avgFetchDataInterval;
         private double _avgVelocity;
         private double _receiveRadius;
 
@@ -63,6 +65,23 @@ namespace BSASimulator
                     return 3000;
                 default:
                     return 500;
+            }
+        }
+
+        public double[] GetIntervalPattern()
+        {
+            if (_systemType == null)
+            {
+                throw new Exception("没有初始化通信系统");
+            }
+            switch (_systemType)
+            {
+                case SystemType.CDMA2000:
+                    return new double[]{2};
+                case SystemType.WCDMA:
+                    return new double[]{2};
+                default:
+                    return new double[]{2};
             }
         }
 
@@ -110,21 +129,6 @@ namespace BSASimulator
                 throw new Exception("没有初始化速度");
             }
             return _avgVelocity;
-        }
-
-        public Option SetAvgFetchDataInterval(double interval)
-        {
-            _avgFetchDataInterval = interval;
-            return this;
-        }
-
-        public double GetAvgFetchDataInterval()
-        {
-            if (_avgFetchDataInterval == null)
-            {
-                throw new Exception("没有初始化数据获取间隔");
-            }
-            return _avgFetchDataInterval;
         }
 
         public Option SetMapProportion(double width, double height)
@@ -186,6 +190,21 @@ namespace BSASimulator
                 throw new Exception("没有初始化系统类型");
             }
             return _systemType;
+        }
+
+        public Option SetHeight(double height)
+        {
+            _height = height;
+            return this;
+        }
+
+        public double GetHeight()
+        {
+            if (_height == null)
+            {
+                throw new Exception("没有初始化飞行高度");
+            }
+            return _height;
         }
     }
 }

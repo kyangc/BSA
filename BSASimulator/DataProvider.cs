@@ -30,13 +30,14 @@ namespace BSASimulator
             _taList = new List<Dictionary<string, int>>();
             _rssList = new List<Dictionary<string, double>>();
             _aoaList = new List<Dictionary<string, double>>();
+            int currentIntervalIndex = 0;
 
             double[] currentMovement = new double[4]
             {
                 _options.GetStartPosition()[0],
                 _options.GetStartPosition()[1],
                 _options.GetInitDirection(),
-                _options.GetAvgFetchDataInterval()
+                _options.GetIntervalPattern()[currentIntervalIndex]
             };
 
             while (
@@ -46,17 +47,18 @@ namespace BSASimulator
                 currentMovement[1] <= _options.GetMapProportion()[1])
             {
                 GetData(currentMovement);
-                currentMovement = Move(currentMovement);
+                currentIntervalIndex = (currentIntervalIndex + 1) % options.GetIntervalPattern().Length;
+                currentMovement = Move(currentMovement, currentIntervalIndex);
             }
 
             _isDataReady = true;
             return this;
         }
 
-        private double[] Move(double[] currentMovement)
+        private double[] Move(double[] currentMovement, int currentIntervalIndex)
         {
             double newDirection = Utils.GetBiasedAngle(currentMovement[2]) / 180 * Math.PI;
-            double fetchDataInterval = Utils.GetBiasedValue(_options.GetAvgFetchDataInterval());
+            double fetchDataInterval = Utils.GetBiasedValue(_options.GetIntervalPattern()[currentIntervalIndex]);
             double moveDistance = fetchDataInterval * Utils.GetBiasedValue(_options.GetAvgVelocity());
             double nowX = currentMovement[0] + moveDistance * Math.Cos(newDirection);
             double nowY = currentMovement[1] + moveDistance * Math.Sin(newDirection);
@@ -122,7 +124,8 @@ namespace BSASimulator
                         currentMovement[0],
                         currentMovement[1],
                         kvp.Value[0],
-                        kvp.Value[1]));
+                        kvp.Value[1],
+                        _options.GetHeight()));
                 }
             }
 
@@ -130,6 +133,15 @@ namespace BSASimulator
             _rssList.Add(rssDic);
             _taList.Add(taDic);
             _aoaList.Add(aoaDic);
+        }
+
+        /// <summary>
+        /// Return the total fetching data times
+        /// </summary>
+        /// <returns></returns>
+        public int GetTotalStep()
+        {
+            return _realPathList.Count;
         }
 
         /// <summary>
@@ -178,7 +190,7 @@ namespace BSASimulator
         }
 
         /// <summary>
-        ///  Returns Intervals in fetching around stations at the current positon,
+        ///  Returns Intervals in fetching around stations at the current positon(interval from last fetching),
         ///  around 6(if in receive radius) stations and the main connected position
         /// </summary>
         /// <param name="step"></param>
@@ -192,6 +204,11 @@ namespace BSASimulator
             return _fetchDataInterval[step];
         }
 
+        /// <summary>
+        /// Get the real position at the given step
+        /// </summary>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public double[] GetRealPathAt(int step)
         {
             if (!_isDataReady)
@@ -199,6 +216,27 @@ namespace BSASimulator
                 throw new Exception("数据没有初始化");
             }
             return _realPathList[step];
+        }
+
+        /// <summary>
+        /// Get base stations' positon by their cell id
+        /// </summary>
+        /// <returns></returns>
+        public double[] GetBsPosition(string cellId)
+        {
+            int x, y;
+            try
+            {
+                string[] tmp = cellId.Split(',');
+                x = int.Parse(tmp[0]);
+                y = int.Parse(tmp[1]);
+            }
+            catch (Exception)
+            {
+                throw new Exception("整形转换错误");
+            }
+
+            return Utils.GetBsPosition(x, y, _options.GetBsIntencity());
         }
     }
 }
