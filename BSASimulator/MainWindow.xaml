@@ -11,6 +11,7 @@
                         HorizontalAlignment="Left" 
                         VerticalAlignment="Center" Width="93">
                 <RadioButton x:Name="SimulationTypeTaRadioButton"
+                             IsChecked="True"
                              IsEnabled="True" 
                              Content="TA" 
                              HorizontalAlignment="Left"
@@ -20,21 +21,18 @@
                              Content="TDOA" 
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"
-                             IsChecked="True"
                              />
                 <RadioButton x:Name="SimulationTypeTaaoaRadioButton" 
                              IsEnabled="True" 
                              Content="TA+AOA" 
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"
-                             IsChecked="True"
                              />
                 <RadioButton x:Name="SimulationTypeRssRadioButton" 
                              IsEnabled="True" 
                              Content="RSS" 
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"
-                             IsChecked="True"
                              />
             </StackPanel>
         </GroupBox>
@@ -75,13 +73,13 @@
                              IsEnabled="True" 
                              Content="CDMA2000" 
                              HorizontalAlignment="Left"
+                             IsChecked="True"
                              VerticalAlignment="Center"/>
                 <RadioButton x:Name="SystemTypeWcdmaRadioButton" 
                              IsEnabled="True" 
                              Content="WCDMA" 
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"
-                             IsChecked="True"
                              />
             </StackPanel>
         </GroupBox>

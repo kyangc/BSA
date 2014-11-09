@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace BSASimulator
@@ -78,6 +79,23 @@ namespace BSASimulator
 
             _dataProvider = DataProvider.NewInstance()
                 .PrepareData(_options);
+
+            switch (_options.GetSimulationType())
+            {
+                case Option.SimulationType.RSS:
+                    break;
+                case Option.SimulationType.TA:
+                    List<double[]> res = Ta.NewIncetance()
+                        .SetDataProvider(_dataProvider)
+                        .SetOption(_options)
+                        .StartAlgorithm()
+                        .GetResultPath();
+                    break;
+                case Option.SimulationType.TDOA:
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

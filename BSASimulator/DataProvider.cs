@@ -117,7 +117,7 @@ namespace BSASimulator
 
                 if (distance <= _options.GetReceiveRadius())
                 {
-                    taDic.Add(kvp.Key, Utils.GetTa(distance));
+                    taDic.Add(kvp.Key, Utils.GetTa(distance ,_options.GetSystemType()));
                     rssDic.Add(kvp.Key, Utils.GetSignalStrength(
                         currentMovement[0],
                         currentMovement[1],

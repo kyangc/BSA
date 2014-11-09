@@ -70,9 +70,17 @@ namespace BSASimulator
         /// </summary>
         /// <param name="distance"></param>
         /// <returns></returns>
-        public static int GetTa(double distance)
+        public static int GetTa(double distance, Option.SystemType systemType)
         {
-            return (int)Math.Ceiling(distance / 500.0);
+            switch (systemType)
+            {
+                case Option.SystemType.CDMA2000:
+                    return (int)Math.Ceiling(distance / 500.0);
+                case Option.SystemType.WCDMA:
+                    return (int)Math.Ceiling(distance / 500.0);
+                default:
+                    return 0;
+            }
         }
 
         /// <summary>
@@ -146,6 +154,29 @@ namespace BSASimulator
         public static void OutputDatas(List<double[]> realPath, List<double[]> allocatedPath, List<double> errorList)
         {
             //TODO add method to output datas
+        }
+
+        /// <summary>
+        /// Calculate the Euclidean distance
+        /// </summary>
+        /// <param name="data1"></param>
+        /// <param name="data2"></param>
+        /// <returns></returns>
+        public static double GetEucDisatance(double[] data1, double[] data2)
+        {
+            if (data1.Length <= 0 || data2.Length <= 0 || data1.Length != data2.Length)
+            {
+                throw new Exception("无法计算欧式距离");
+            }
+            else
+            {
+                double sum = 0;
+                for (int i = 0; i < data1.Length; i++)
+                {
+                    sum += Math.Pow(data1[i] - data2[i], 2);
+                }
+                return Math.Sqrt(sum);
+            }
         }
     }
 }

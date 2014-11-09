@@ -89,6 +89,24 @@ namespace BSASimulator
             }
         }
 
+        public double GetTaDistance()
+        {
+            if (_systemType == null)
+            {
+                throw new Exception("没有初始化通信系统");
+            }
+            switch (_systemType)
+            {
+                case SystemType.CDMA2000:
+                    return 500;
+                case SystemType.WCDMA:
+                    return 500;
+                //TODO more system support is on the way
+                default:
+                    return 500;
+            }
+        }
+
         public Option SetSimulationType(SimulationType simulationType)
         {
             _simulationType = simulationType;

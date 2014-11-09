@@ -6,10 +6,17 @@ namespace BSASimulator
     {
         private DataProvider _dataProvider;
         private List<double[]> _resultPath;
+        private Option _option;
 
-        public Tdoa NewIncetance()
+        public static Tdoa NewIncetance()
         {
             return new Tdoa();
+        }
+
+        public Tdoa SetOption(Option option)
+        {
+            _option = option;
+            return this;
         }
 
         public Tdoa SetDataProvider(DataProvider dataProvider)
@@ -18,10 +25,10 @@ namespace BSASimulator
             return this;
         }
 
-        public Tdoa StartAlgorithm(Option.SystemType systemType)
+        public Tdoa StartAlgorithm()
         {
             //TODO And real alocation algorithm
-            switch (systemType)
+            switch (_option.GetSystemType())
             {
                 case Option.SystemType.CDMA2000:
                     break;

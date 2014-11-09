@@ -9,9 +9,10 @@ namespace BSASimulator
     class Rss
     {
         private DataProvider _dataProvider;
-        private List<double[]> _resultPath; 
+        private List<double[]> _resultPath;
+        private Option _option;
 
-        public Rss NewIncetance()
+        public static Rss NewIncetance()
         {
             return new Rss();
         }
@@ -22,10 +23,16 @@ namespace BSASimulator
             return this;
         }
 
-        public Rss StartAlgorithm(Option.SystemType systemType)
+        public Rss SetOption(Option option)
+        {
+            _option = option;
+            return this;
+        }
+
+        public Rss StartAlgorithm()
         {
             //TODO And real alocation algorithm
-            switch (systemType)
+            switch (_option.GetSystemType())
             {
                 case Option.SystemType.CDMA2000:
                     break;
