@@ -1,43 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Documents;
-using System.Windows.Media.Animation;
-using System.Xml.Serialization;
 
 namespace BSASimulator
-{   
+{
     /// <summary>
-    /// Author Chengkangyang @8/11/14 
+    ///     Author Chengkangyang @8/11/14
     /// </summary>
     internal class Utils
     {
         /// <summary>
-        ///  Get biased value, the new value is made 0.8~1.2 times of origin value
+        ///     Get biased value, the new value is made 0.8~1.2 times of origin value
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
         public static double GetBiasedValue(double value)
         {
             var random = new Random(Guid.NewGuid().GetHashCode());
-            double bias = (random.NextDouble() - 0.5) * 0.4;
-            return (bias + 1) * value;
+            double bias = (random.NextDouble() - 0.5)*0.4;
+            return (bias + 1)*value;
         }
 
         /// <summary>
-        /// Get biased angle, the new angle is made a variable bias (-5 ~ +10) 
-        /// degree of origin angel
+        ///     Get biased angle, the new angle is made a variable bias (-5 ~ +10)
+        ///     degree of origin angel
         /// </summary>
         /// <param name="angle"></param>
         /// <returns></returns>
         public static double GetBiasedAngle(double angle)
         {
             var random = new Random(Guid.NewGuid().GetHashCode());
-            double bias = (random.NextDouble() * 3 - 1) * 5;
+            double bias = (random.NextDouble()*3 - 1)*5;
             return angle + bias;
         }
 
         /// <summary>
-        /// Get the base station position in the given index region
+        ///     Get the base station position in the given index region
         /// </summary>
         /// <param name="indexX"></param>
         /// <param name="indexY"></param>
@@ -45,15 +42,15 @@ namespace BSASimulator
         /// <returns></returns>
         public static double[] GetBsPosition(int indexX, int indexY, double regionLength)
         {
-            double[] position = new double[2];
-            position[0] = (2 * indexX - 1) * regionLength / 2.0;
-            position[1] = (2 * indexY - 1) * regionLength / 2.0;
-            if (indexY % 2 == 0) position[0] = position[0] - regionLength / 2.0;
+            var position = new double[2];
+            position[0] = (2*indexX - 1)*regionLength/2.0;
+            position[1] = (2*indexY - 1)*regionLength/2.0;
+            if (indexY%2 == 0) position[0] = position[0] - regionLength/2.0;
             return position;
         }
 
         /// <summary>
-        /// Get the distance between the given 2 points
+        ///     Get the distance between the given 2 points
         /// </summary>
         /// <param name="x1"></param>
         /// <param name="y1"></param>
@@ -66,7 +63,7 @@ namespace BSASimulator
         }
 
         /// <summary>
-        /// Get the TA from the distance between device and base station
+        ///     Get the TA from the distance between device and base station
         /// </summary>
         /// <param name="distance"></param>
         /// <returns></returns>
@@ -75,16 +72,16 @@ namespace BSASimulator
             switch (systemType)
             {
                 case Option.SystemType.CDMA2000:
-                    return (int)Math.Ceiling(distance / 500.0);
+                    return (int) Math.Ceiling(distance/500.0);
                 case Option.SystemType.WCDMA:
-                    return (int)Math.Ceiling(distance / 500.0);
+                    return (int) Math.Ceiling(distance/500.0);
                 default:
                     return 0;
             }
         }
 
         /// <summary>
-        /// Get the signal strength from the given base station
+        ///     Get the signal strength from the given base station
         /// </summary>
         /// <returns></returns>
         public static double GetSignalStrength(double x, double y, double distance, Option.SystemType systemType)
@@ -94,19 +91,19 @@ namespace BSASimulator
             {
                 case Option.SystemType.CDMA2000:
                     frequence = 800;
-                    pt = 15;//基站发射功率
-                    gr = 10;//接收天线增益
-                    gt = 10;//发射天线增益
-                    lc = 3;//电缆和榄头衰耗
-                    lbf = 32.5 + 20 * Math.Log10(frequence) + 20 * Math.Log10(distance / 1000.0);
+                    pt = 15; //基站发射功率
+                    gr = 10; //接收天线增益
+                    gt = 10; //发射天线增益
+                    lc = 3; //电缆和榄头衰耗
+                    lbf = 32.5 + 20*Math.Log10(frequence) + 20*Math.Log10(distance/1000.0);
                     return pt + gr + gt - lc - lbf;
                 case Option.SystemType.WCDMA:
                     frequence = 800;
-                    pt = 15;//基站发射功率
-                    gr = 10;//接收天线增益
-                    gt = 10;//发射天线增益
-                    lc = 3;//电缆和榄头衰耗
-                    lbf = 32.5 + 20 * Math.Log10(frequence) + 20 * Math.Log10(distance / 1000.0);
+                    pt = 15; //基站发射功率
+                    gr = 10; //接收天线增益
+                    gt = 10; //发射天线增益
+                    lc = 3; //电缆和榄头衰耗
+                    lbf = 32.5 + 20*Math.Log10(frequence) + 20*Math.Log10(distance/1000.0);
                     return pt + gr + gt - lc - lbf;
                 default:
                     return 0;
@@ -114,9 +111,9 @@ namespace BSASimulator
         }
 
         /// <summary>
-        /// Get the AOA in degree (not radian)
-        /// Attention here: the angle is the station's send off angle, an angle convert is needed if necessary.
-        /// AND! If you need a 3D angle, please write oneself....
+        ///     Get the AOA in degree (not radian)
+        ///     Attention here: the angle is the station's send off angle, an angle convert is needed if necessary.
+        ///     AND! If you need a 3D angle, please write oneself....
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -127,13 +124,13 @@ namespace BSASimulator
         public static double GetAoa(double x, double y, double bsX, double bsY, double height)
         {
             double distance = Math.Sqrt(Math.Pow(GetDistanceBetween(x, y, bsX, bsY), 2) + Math.Pow(height, 2));
-            if ((int)distance == 0) return 0;
-            double cosTheta = (x - bsX) / distance;
-            return Math.Acos(cosTheta) * 180 / Math.PI;
+            if ((int) distance == 0) return 0;
+            double cosTheta = (x - bsX)/distance;
+            return Math.Acos(cosTheta)*180/Math.PI;
         }
 
         /// <summary>
-        /// Get the error analysis list
+        ///     Get the error analysis list
         /// </summary>
         /// <param name="realPath"></param>
         /// <param name="allocateResultPath"></param>
@@ -146,7 +143,7 @@ namespace BSASimulator
         }
 
         /// <summary>
-        /// Output allocation result to .csv
+        ///     Output allocation result to .csv
         /// </summary>
         /// <param name="realPath"></param>
         /// <param name="allocatedPath"></param>
@@ -157,7 +154,7 @@ namespace BSASimulator
         }
 
         /// <summary>
-        /// Calculate the Euclidean distance
+        ///     Calculate the Euclidean distance
         /// </summary>
         /// <param name="data1"></param>
         /// <param name="data2"></param>
@@ -168,15 +165,12 @@ namespace BSASimulator
             {
                 throw new Exception("无法计算欧式距离");
             }
-            else
+            double sum = 0;
+            for (int i = 0; i < data1.Length; i++)
             {
-                double sum = 0;
-                for (int i = 0; i < data1.Length; i++)
-                {
-                    sum += Math.Pow(data1[i] - data2[i], 2);
-                }
-                return Math.Sqrt(sum);
+                sum += Math.Pow(data1[i] - data2[i], 2);
             }
+            return Math.Sqrt(sum);
         }
     }
 }

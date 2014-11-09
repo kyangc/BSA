@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Windows.Media.Animation;
 
 namespace BSASimulator
 {
     /// <summary>
-    /// Author Chengkangyang @8/11/14 
+    ///     Author Chengkangyang @8/11/14
     /// </summary>
     internal class Option
     {
@@ -29,17 +28,18 @@ namespace BSASimulator
             WCDMA = 1
         }
 
-        private SimulationType _simulationType;
+        private double _avgVelocity;
+
         private BaseStationIntensity _baseStationIntensity;
-        private SystemType _systemType;
 
         private double _height;
+        private double _initDirection;
         private double _mapHeight;
         private double _mapWidth;
-        private double _startX, _startY;
-        private double _initDirection;
-        private double _avgVelocity;
         private double _receiveRadius;
+        private SimulationType _simulationType;
+        private double _startX, _startY;
+        private SystemType _systemType;
 
         public static Option GetCustomedOption()
         {
@@ -80,12 +80,12 @@ namespace BSASimulator
             switch (_systemType)
             {
                 case SystemType.CDMA2000:
-                    return new double[]{2};
+                    return new double[] {2};
                 case SystemType.WCDMA:
-                    return new double[]{2};
+                    return new double[] {2};
                     //TODO more system support is on the way
                 default:
-                    return new double[]{2};
+                    return new double[] {2};
             }
         }
 
@@ -101,7 +101,7 @@ namespace BSASimulator
                     return 500;
                 case SystemType.WCDMA:
                     return 500;
-                //TODO more system support is on the way
+                    //TODO more system support is on the way
                 default:
                     return 500;
             }

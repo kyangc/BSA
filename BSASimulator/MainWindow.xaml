@@ -4,85 +4,80 @@
         ResizeMode="NoResize"
         Title="MainWindow" Height="195" Width="256">
     <Grid Background="White" Margin="0,0,4,1" HorizontalAlignment="Right" Width="246">
-        <GroupBox Header="仿真模式"  
+        <GroupBox Header="仿真模式"
                   VerticalAlignment="Top"
                   Height="91" Margin="19,0,143,0">
             <StackPanel Margin="0,6,-32,7"
-                        HorizontalAlignment="Left" 
+                        HorizontalAlignment="Left"
                         VerticalAlignment="Center" Width="93">
                 <RadioButton x:Name="SimulationTypeTaRadioButton"
                              IsChecked="True"
-                             IsEnabled="True" 
-                             Content="TA" 
+                             IsEnabled="True"
+                             Content="TA"
                              HorizontalAlignment="Left"
-                             VerticalAlignment="Center"/>
-                <RadioButton x:Name="SimulationTypeTdoaRadioButton" 
-                             IsEnabled="True" 
-                             Content="TDOA" 
+                             VerticalAlignment="Center" />
+                <RadioButton x:Name="SimulationTypeTdoaRadioButton"
+                             IsEnabled="True"
+                             Content="TDOA"
                              HorizontalAlignment="Left"
-                             VerticalAlignment="Center"
-                             />
-                <RadioButton x:Name="SimulationTypeTaaoaRadioButton" 
-                             IsEnabled="True" 
-                             Content="TA+AOA" 
+                             VerticalAlignment="Center" />
+                <RadioButton x:Name="SimulationTypeTaaoaRadioButton"
+                             IsEnabled="True"
+                             Content="TA+AOA"
                              HorizontalAlignment="Left"
-                             VerticalAlignment="Center"
-                             />
-                <RadioButton x:Name="SimulationTypeRssRadioButton" 
-                             IsEnabled="True" 
-                             Content="RSS" 
+                             VerticalAlignment="Center" />
+                <RadioButton x:Name="SimulationTypeRssRadioButton"
+                             IsEnabled="True"
+                             Content="RSS"
                              HorizontalAlignment="Left"
-                             VerticalAlignment="Center"
-                             />
+                             VerticalAlignment="Center" />
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="基站密度"  
+        <GroupBox Header="基站密度"
                   VerticalAlignment="Top"
                   Height="91" Margin="111,0,29,0">
             <StackPanel Margin="0,0,0,0"
-                        HorizontalAlignment="Left" 
+                        HorizontalAlignment="Left"
                         VerticalAlignment="Center">
                 <RadioButton x:Name="SimulationBsIntensityMostTaRadioButton"
-                             IsEnabled="True" 
-                             Content="0.5KM" 
+                             IsEnabled="True"
+                             Content="0.5KM"
                              HorizontalAlignment="Left"
-                             VerticalAlignment="Center"/>
-                <RadioButton x:Name="SimulationBsIntensityLessTaRadioButton" 
-                             IsEnabled="True" 
-                             Content="1KM" 
-                             HorizontalAlignment="Left"
-                             VerticalAlignment="Center"
-                             IsChecked="True"
-                             />
-                <RadioButton x:Name="SimulationBsIntensityLeastTaRadioButton" 
-                             IsEnabled="True" 
-                             Content="3KM" 
+                             VerticalAlignment="Center" />
+                <RadioButton x:Name="SimulationBsIntensityLessTaRadioButton"
+                             IsEnabled="True"
+                             Content="1KM"
                              HorizontalAlignment="Left"
                              VerticalAlignment="Center"
-                             IsChecked="True"
-                             />
+                             IsChecked="True" />
+                <RadioButton x:Name="SimulationBsIntensityLeastTaRadioButton"
+                             IsEnabled="True"
+                             Content="3KM"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Center"
+                             IsChecked="True" />
             </StackPanel>
         </GroupBox>
-        <GroupBox Header="通信系统"  
+        <GroupBox Header="通信系统"
                   VerticalAlignment="Top"
                   Height="55" Margin="111,96,29,0">
             <StackPanel Margin="0,0,0,0"
-                        HorizontalAlignment="Left" 
+                        HorizontalAlignment="Left"
                         VerticalAlignment="Center">
                 <RadioButton x:Name="SystemTypeCdmaRadioButton"
-                             IsEnabled="True" 
-                             Content="CDMA2000" 
+                             IsEnabled="True"
+                             Content="CDMA2000"
                              HorizontalAlignment="Left"
                              IsChecked="True"
-                             VerticalAlignment="Center"/>
-                <RadioButton x:Name="SystemTypeWcdmaRadioButton" 
-                             IsEnabled="True" 
-                             Content="WCDMA" 
+                             VerticalAlignment="Center" />
+                <RadioButton x:Name="SystemTypeWcdmaRadioButton"
+                             IsEnabled="True"
+                             Content="WCDMA"
                              HorizontalAlignment="Left"
-                             VerticalAlignment="Center"
-                             />
+                             VerticalAlignment="Center" />
             </StackPanel>
         </GroupBox>
-        <Button Click="OnclickStart" Content="开始仿真" HorizontalAlignment="Left" Margin="24,119,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Click="OnclickStart" Content="开始仿真" HorizontalAlignment="Left" Margin="24,119,0,0"
+                VerticalAlignment="Top" Width="75" />
     </Grid>
 </Window>

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace BSASimulator
 {
-    class Rss
+    internal class Rss
     {
         private DataProvider _dataProvider;
-        private List<double[]> _resultPath;
         private Option _option;
+        private List<double[]> _resultPath;
 
         public static Rss NewIncetance()
         {

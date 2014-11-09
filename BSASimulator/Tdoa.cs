@@ -5,8 +5,8 @@ namespace BSASimulator
     internal class Tdoa
     {
         private DataProvider _dataProvider;
-        private List<double[]> _resultPath;
         private Option _option;
+        private List<double[]> _resultPath;
 
         public static Tdoa NewIncetance()
         {

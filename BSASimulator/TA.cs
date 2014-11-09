@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BSASimulator
 {
-    class Ta
+    internal class Ta
     {
         private DataProvider _dataProvider;
-        private List<double[]> _resultPath;
         private Option _option;
+        private List<double[]> _resultPath;
 
         public static Ta NewIncetance()
         {
@@ -43,11 +40,11 @@ namespace BSASimulator
                         double[] taVector = GetTaVector(3, _dataProvider.GetTaAt(i));
 
                         double diff = int.MaxValue;
-                        double[] position = new double[2];
+                        var position = new double[2];
 
-                        for (int j = (int)searchArea[0]; j < (int)searchArea[1]; j += 50)
+                        for (var j = (int) searchArea[0]; j < (int) searchArea[1]; j += 50)
                         {
-                            for (int k = (int)searchArea[2]; k < (int)searchArea[3]; k+=50)
+                            for (var k = (int) searchArea[2]; k < (int) searchArea[3]; k += 50)
                             {
                                 double tmp = Utils.GetEucDisatance(taVector,
                                     GetDistanceVector(j, k, 3, _dataProvider.GetTaAt(i)));
@@ -90,21 +87,21 @@ namespace BSASimulator
             for (int i = 0; i < circleCount; i++)
             {
                 double[] pos = _dataProvider.GetBsPosition(cellids[i]);
-                double radius = taDictionary[cellids[i]] * _option.GetTaDistance();
+                double radius = taDictionary[cellids[i]]*_option.GetTaDistance();
                 marginLeft = pos[0] - radius > marginLeft ? pos[0] - radius : marginLeft;
                 marginRight = pos[0] + radius < marginRight ? pos[0] + radius : marginRight;
                 marginButtom = pos[1] - radius > marginButtom ? pos[1] - radius : marginButtom;
                 marginTop = pos[1] + radius < marginTop ? pos[1] + radius : marginTop;
             }
 
-            return new[] { marginLeft, marginRight, marginButtom, marginTop };
+            return new[] {marginLeft, marginRight, marginButtom, marginTop};
         }
 
         private double[] GetDistanceVector(double x, double y, int vectorCount, Dictionary<string, int> taDictionary)
         {
             vectorCount = vectorCount > taDictionary.Count ? taDictionary.Count : vectorCount;
 
-            double[] vector = new double[vectorCount];
+            var vector = new double[vectorCount];
             string[] cellids = taDictionary.Keys.ToArray();
 
             for (int i = 0; i < vectorCount; i++)
@@ -120,12 +117,12 @@ namespace BSASimulator
         {
             vectorCount = vectorCount > taDictionary.Count ? taDictionary.Count : vectorCount;
 
-            double[] vector = new double[vectorCount];
+            var vector = new double[vectorCount];
             int[] ta = taDictionary.Values.ToArray();
 
             for (int i = 0; i < vectorCount; i++)
             {
-                vector[i] = ta[i] * _option.GetTaDistance();
+                vector[i] = ta[i]*_option.GetTaDistance();
             }
 
             return vector;

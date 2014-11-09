@@ -55,7 +55,7 @@ namespace BSASimulator
                 bool? isChecked = _simulateTypeRadioButtons[i].IsChecked;
                 if (isChecked != null && isChecked.Value)
                 {
-                    _options.SetSimulationType((Option.SimulationType)i);
+                    _options.SetSimulationType((Option.SimulationType) i);
                 }
             }
 
@@ -64,7 +64,7 @@ namespace BSASimulator
                 bool? isChecked = _baseStationIntensityRadioButtons[i].IsChecked;
                 if (isChecked != null && isChecked.Value)
                 {
-                    _options.SetBsIntensity((Option.BaseStationIntensity)i);
+                    _options.SetBsIntensity((Option.BaseStationIntensity) i);
                 }
             }
 
@@ -73,7 +73,7 @@ namespace BSASimulator
                 bool? isChecked = _systemTypeRadioButtons[i].IsChecked;
                 if (isChecked != null && isChecked.Value)
                 {
-                    _options.SetSystemType((Option.SystemType)i);
+                    _options.SetSystemType((Option.SystemType) i);
                 }
             }
 

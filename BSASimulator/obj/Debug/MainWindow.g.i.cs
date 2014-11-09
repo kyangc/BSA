@@ -56,7 +56,7 @@ namespace BSASimulator {
         #line hidden
         
         
-        #line 25 "..\..\MainWindow.xaml"
+        #line 24 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.RadioButton SimulationTypeTaaoaRadioButton;
         
@@ -64,7 +64,7 @@ namespace BSASimulator {
         #line hidden
         
         
-        #line 31 "..\..\MainWindow.xaml"
+        #line 29 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.RadioButton SimulationTypeRssRadioButton;
         
@@ -72,7 +72,7 @@ namespace BSASimulator {
         #line hidden
         
         
-        #line 45 "..\..\MainWindow.xaml"
+        #line 42 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.RadioButton SimulationBsIntensityMostTaRadioButton;
         
@@ -80,7 +80,7 @@ namespace BSASimulator {
         #line hidden
         
         
-        #line 50 "..\..\MainWindow.xaml"
+        #line 47 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.RadioButton SimulationBsIntensityLessTaRadioButton;
         
@@ -88,7 +88,7 @@ namespace BSASimulator {
         #line hidden
         
         
-        #line 57 "..\..\MainWindow.xaml"
+        #line 53 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.RadioButton SimulationBsIntensityLeastTaRadioButton;
         
@@ -96,7 +96,7 @@ namespace BSASimulator {
         #line hidden
         
         
-        #line 72 "..\..\MainWindow.xaml"
+        #line 67 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.RadioButton SystemTypeCdmaRadioButton;
         
@@ -104,7 +104,7 @@ namespace BSASimulator {
         #line hidden
         
         
-        #line 78 "..\..\MainWindow.xaml"
+        #line 73 "..\..\MainWindow.xaml"
         [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields")]
         internal System.Windows.Controls.RadioButton SystemTypeWcdmaRadioButton;
         
@@ -170,7 +170,7 @@ namespace BSASimulator {
             return;
             case 10:
             
-            #line 86 "..\..\MainWindow.xaml"
+            #line 80 "..\..\MainWindow.xaml"
             ((System.Windows.Controls.Button)(target)).Click += new System.Windows.RoutedEventHandler(this.OnclickStart);
             
             #line default
