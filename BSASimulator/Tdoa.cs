@@ -18,9 +18,16 @@ namespace BSASimulator
             return this;
         }
 
-        public Tdoa StartAlgorithm()
+        public Tdoa StartAlgorithm(Option.SystemType systemType)
         {
             //TODO And real alocation algorithm
+            switch (systemType)
+            {
+                case Option.SystemType.CDMA2000:
+                    break;
+                case Option.SystemType.WCDMA:
+                    break;
+            }
             return this;
         }
 
