@@ -83,6 +83,7 @@ namespace BSASimulator
                     return new double[]{2};
                 case SystemType.WCDMA:
                     return new double[]{2};
+                    //TODO more system support is on the way
                 default:
                     return new double[]{2};
             }

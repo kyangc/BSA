@@ -92,6 +92,14 @@ namespace BSASimulator
                     lc = 3;//电缆和榄头衰耗
                     lbf = 32.5 + 20 * Math.Log10(frequence) + 20 * Math.Log10(distance / 1000.0);
                     return pt + gr + gt - lc - lbf;
+                case Option.SystemType.WCDMA:
+                    frequence = 800;
+                    pt = 15;//基站发射功率
+                    gr = 10;//接收天线增益
+                    gt = 10;//发射天线增益
+                    lc = 3;//电缆和榄头衰耗
+                    lbf = 32.5 + 20 * Math.Log10(frequence) + 20 * Math.Log10(distance / 1000.0);
+                    return pt + gr + gt - lc - lbf;
                 default:
                     return 0;
             }
