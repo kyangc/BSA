@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
 
 namespace BSASimulator
 {
@@ -8,6 +11,11 @@ namespace BSASimulator
     /// </summary>
     internal class Utils
     {
+        public enum AnalysisType
+        {
+            Average = 0
+        }
+
         /// <summary>
         ///     Get biased value, the new value is made 0.8~1.2 times of origin value
         /// </summary>
@@ -16,8 +24,8 @@ namespace BSASimulator
         public static double GetBiasedValue(double value)
         {
             var random = new Random(Guid.NewGuid().GetHashCode());
-            double bias = (random.NextDouble() - 0.5)*0.4;
-            return (bias + 1)*value;
+            double bias = (random.NextDouble() - 0.5) * 0.4;
+            return (bias + 1) * value;
         }
 
         /// <summary>
@@ -29,7 +37,7 @@ namespace BSASimulator
         public static double GetBiasedAngle(double angle)
         {
             var random = new Random(Guid.NewGuid().GetHashCode());
-            double bias = (random.NextDouble()*3 - 1)*5;
+            double bias = (random.NextDouble() * 3 - 1) * 5;
             return angle + bias;
         }
 
@@ -43,9 +51,9 @@ namespace BSASimulator
         public static double[] GetBsPosition(int indexX, int indexY, double regionLength)
         {
             var position = new double[2];
-            position[0] = (2*indexX - 1)*regionLength/2.0;
-            position[1] = (2*indexY - 1)*regionLength/2.0;
-            if (indexY%2 == 0) position[0] = position[0] - regionLength/2.0;
+            position[0] = (2 * indexX - 1) * regionLength / 2.0;
+            position[1] = (2 * indexY - 1) * regionLength / 2.0;
+            if (indexY % 2 == 0) position[0] = position[0] - regionLength / 2.0;
             return position;
         }
 
@@ -66,15 +74,16 @@ namespace BSASimulator
         ///     Get the TA from the distance between device and base station
         /// </summary>
         /// <param name="distance"></param>
+        /// <param name="systemType"></param>
         /// <returns></returns>
         public static int GetTa(double distance, Option.SystemType systemType)
         {
             switch (systemType)
             {
-                case Option.SystemType.CDMA2000:
-                    return (int) Math.Ceiling(distance/500.0);
-                case Option.SystemType.WCDMA:
-                    return (int) Math.Ceiling(distance/500.0);
+                case Option.SystemType.Cdma2000:
+                    return (int)Math.Ceiling(distance / 500.0);
+                case Option.SystemType.Wcdma:
+                    return (int)Math.Ceiling(distance / 500.0);
                 default:
                     return 0;
             }
@@ -89,21 +98,21 @@ namespace BSASimulator
             double frequence, pt, gr, gt, lc, lbf;
             switch (systemType)
             {
-                case Option.SystemType.CDMA2000:
+                case Option.SystemType.Cdma2000:
                     frequence = 800;
                     pt = 15; //基站发射功率
                     gr = 10; //接收天线增益
                     gt = 10; //发射天线增益
                     lc = 3; //电缆和榄头衰耗
-                    lbf = 32.5 + 20*Math.Log10(frequence) + 20*Math.Log10(distance/1000.0);
+                    lbf = 32.5 + 20 * Math.Log10(frequence) + 20 * Math.Log10(distance / 1000.0);
                     return pt + gr + gt - lc - lbf;
-                case Option.SystemType.WCDMA:
+                case Option.SystemType.Wcdma:
                     frequence = 800;
                     pt = 15; //基站发射功率
                     gr = 10; //接收天线增益
                     gt = 10; //发射天线增益
                     lc = 3; //电缆和榄头衰耗
-                    lbf = 32.5 + 20*Math.Log10(frequence) + 20*Math.Log10(distance/1000.0);
+                    lbf = 32.5 + 20 * Math.Log10(frequence) + 20 * Math.Log10(distance / 1000.0);
                     return pt + gr + gt - lc - lbf;
                 default:
                     return 0;
@@ -124,33 +133,104 @@ namespace BSASimulator
         public static double GetAoa(double x, double y, double bsX, double bsY, double height)
         {
             double distance = Math.Sqrt(Math.Pow(GetDistanceBetween(x, y, bsX, bsY), 2) + Math.Pow(height, 2));
-            if ((int) distance == 0) return 0;
-            double cosTheta = (x - bsX)/distance;
-            return Math.Acos(cosTheta)*180/Math.PI;
+            if ((int)distance == 0) return 0;
+            double cosTheta = (x - bsX) / distance;
+            return Math.Acos(cosTheta) * 180 / Math.PI;
         }
 
         /// <summary>
         ///     Get the error analysis list
         /// </summary>
+        /// <param name="systemType"></param>
         /// <param name="realPath"></param>
         /// <param name="allocateResultPath"></param>
         /// <returns></returns>
-        public static List<double> GetErrorAnalysis(List<double[]> realPath, List<double[]> allocateResultPath)
+        public static List<double> GetErrorList(Option.SystemType systemType, List<double[]> realPath,
+            List<double[]> allocateResultPath)
         {
-            var errorList = new List<double>();
-            //TODO add method for analysing errors
-            return errorList;
+            switch (systemType)
+            {
+                case Option.SystemType.Cdma2000:
+                case Option.SystemType.Wcdma:
+                    var errorList = new List<double>();
+                    int count = realPath.Count > allocateResultPath.Count ? allocateResultPath.Count : realPath.Count;
+                    for (int i = 0; i < count; i++)
+                    {
+                        double error =
+                            Math.Sqrt(Math.Pow(realPath[i][0] - allocateResultPath[i][0], 2) +
+                                      Math.Pow(realPath[i][1] - allocateResultPath[i][1], 2));
+                        errorList.Add(error);
+                    }
+                    return errorList;
+                default:
+                    return null;
+            }
         }
 
         /// <summary>
         ///     Output allocation result to .csv
         /// </summary>
         /// <param name="realPath"></param>
-        /// <param name="allocatedPath"></param>
-        /// <param name="errorList"></param>
-        public static void OutputDatas(List<double[]> realPath, List<double[]> allocatedPath, List<double> errorList)
+        /// <param name="resultPath"></param>
+        /// <param name="option"></param>
+        public static void OutputPaths(List<double[]> realPath, List<double[]> resultPath, Option option)
         {
-            //TODO add method to output datas
+            FileInfo fi;
+            StringBuilder sb;
+            int filenum = 0;
+
+            do
+            {
+                sb = new StringBuilder();
+                sb.Append(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+                sb.Append("\\real");
+                sb.Append("_" + option.GetAlgorithmType());
+                sb.Append("_" + option.GetSystemType());
+                sb.Append("_" + option.GetBsIntencity());
+                sb.Append("(" + filenum + ")");
+                sb.Append(".csv");
+                fi = new FileInfo(sb.ToString());
+                filenum++;
+            } while (fi.Exists);
+
+            var sw = new StreamWriter(sb.ToString());
+            for (int i = 0; i < realPath.Count; i++)
+            {
+                var line = new StringBuilder();
+                line.Append(realPath[i][0]);
+                line.Append(',');
+                line.Append(realPath[i][1]);
+                sw.WriteLine(line.ToString());
+                sw.Flush();
+            }
+            sw.Close();
+
+            filenum = 0;
+            do
+            {
+                sb = new StringBuilder();
+                sb.Append(Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory));
+                sb.Append("\\result");
+                sb.Append("_" + option.GetAlgorithmType());
+                sb.Append("_" + option.GetSystemType());
+                sb.Append("_" + option.GetBsIntencity());
+                sb.Append("(" + filenum + ")");
+                sb.Append(".csv");
+                fi = new FileInfo(sb.ToString());
+                filenum++;
+            } while (fi.Exists);
+
+            sw = new StreamWriter(sb.ToString());
+            for (int i = 0; i < resultPath.Count; i++)
+            {
+                var line = new StringBuilder();
+                line.Append(resultPath[i][0]);
+                line.Append(',');
+                line.Append(resultPath[i][1]);
+                sw.WriteLine(line.ToString());
+                sw.Flush();
+            }
+            sw.Close();
         }
 
         /// <summary>
@@ -165,12 +245,27 @@ namespace BSASimulator
             {
                 throw new Exception("无法计算欧式距离");
             }
-            double sum = 0;
-            for (int i = 0; i < data1.Length; i++)
-            {
-                sum += Math.Pow(data1[i] - data2[i], 2);
-            }
+            double sum = data1.Select((t, i) => Math.Pow(t - data2[i], 2)).Sum();
             return Math.Sqrt(sum);
+        }
+
+        /// <summary>
+        /// Return the error analysis of the given analysis type
+        /// </summary>
+        /// <param name="analysisType"></param>
+        /// <param name="errorList"></param>
+        /// <returns></returns>
+        public static double GetErrorAnalysis(AnalysisType analysisType, List<double> errorList)
+        {
+            switch (analysisType)
+            {
+                case AnalysisType.Average:
+                    if (errorList.Count == 0) return -1;
+                    double sum = errorList.Sum();
+                    return sum / errorList.Count;
+                default:
+                    return -1;
+            }
         }
     }
 }

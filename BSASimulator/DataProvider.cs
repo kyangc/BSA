@@ -34,7 +34,7 @@ namespace BSASimulator
             _aoaList = new List<Dictionary<string, double>>();
             int currentIntervalIndex = 0;
 
-            var currentMovement = new double[4]
+            var currentMovement = new[]
             {
                 _options.GetStartPosition()[0],
                 _options.GetStartPosition()[1],
@@ -64,14 +64,14 @@ namespace BSASimulator
             double moveDistance = fetchDataInterval*Utils.GetBiasedValue(_options.GetAvgVelocity());
             double nowX = currentMovement[0] + moveDistance*Math.Cos(newDirection);
             double nowY = currentMovement[1] + moveDistance*Math.Sin(newDirection);
-            return new double[4] {nowX, nowY, newDirection, fetchDataInterval};
+            return new[] {nowX, nowY, newDirection, fetchDataInterval};
         }
 
         private void GetData(double[] currentMovement)
         {
             //Save the fetch data interval and current real position
             _fetchDataInterval.Add(currentMovement[3]);
-            _realPathList.Add(new double[2] {currentMovement[0], currentMovement[1]});
+            _realPathList.Add(new[] {currentMovement[0], currentMovement[1]});
 
             //Get the region length
             double regionLength = _options.GetBsIntencity();
@@ -83,7 +83,7 @@ namespace BSASimulator
             var aoaDic = new Dictionary<string, double>();
 
             //Get the current region index
-            int currentIndexX = 0;
+            int currentIndexX;
             var currentIndexY = (int) Math.Ceiling(currentMovement[1]/regionLength);
             if (currentIndexY%2 == 0)
                 currentIndexX = (int) Math.Ceiling((currentMovement[0] + regionLength*0.5)/regionLength);
@@ -240,6 +240,15 @@ namespace BSASimulator
             }
 
             return Utils.GetBsPosition(x, y, _options.GetBsIntencity());
+        }
+
+        public List<double[]> GetRealPathAll()
+        {
+            if (!_isDataReady)
+            {
+                throw new Exception("数据没有初始化");
+            }
+            return _realPathList;
         }
     }
 }

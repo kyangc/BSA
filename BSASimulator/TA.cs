@@ -1,8 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Threading;
 
 namespace BSASimulator
 {
+    /// <summary>
+    /// @Author Chengkangyang @11/11/14
+    /// </summary>
     internal class Ta
     {
         private DataProvider _dataProvider;
@@ -32,10 +36,11 @@ namespace BSASimulator
             //TODO And real alocation algorithm
             switch (_option.GetSystemType())
             {
-                case Option.SystemType.CDMA2000:
+                case Option.SystemType.Cdma2000:
                     //In this system, you can get mutiple TA at one time
                     for (int i = 0; i < _dataProvider.GetTotalStep(); i++)
                     {
+                        UpdateProgress(i, _dataProvider.GetTotalStep());
                         double[] searchArea = GetOverlapArea(3, _dataProvider.GetTaAt(i));
                         double[] taVector = GetTaVector(3, _dataProvider.GetTaAt(i));
 
@@ -60,7 +65,36 @@ namespace BSASimulator
                         _resultPath.Add(position);
                     }
                     break;
-                case Option.SystemType.WCDMA:
+                case Option.SystemType.Wcdma:
+                    var posiblePostion = new Dictionary<int, List<double[]>>();
+                    for (int i = 0; i < _dataProvider.GetTotalStep(); i++) posiblePostion.Add(i, new List<double[]>());
+
+                    for (int i = 0; i + 3 < _dataProvider.GetTotalStep(); i++)
+                    {
+                        UpdateProgress(i, _dataProvider.GetTotalStep());
+                        string cellid1 = _dataProvider.GetTaAt(i).Keys.ToArray()[0];
+                        string cellid2 = _dataProvider.GetTaAt(i + 3).Keys.ToArray()[0];
+                        if (
+                            !_dataProvider.GetTaAt(i).Keys.ToArray()[0].Equals(
+                                _dataProvider.GetTaAt(i + 3).Keys.ToArray()[0]))
+                        {
+                            cellid2 = _dataProvider.GetTaAt(i + 3).Keys.ToArray()[1];
+                        }
+                        double[] bsPosition1 = _dataProvider.GetBsPosition(cellid1);
+                        double[] bsPosition2 = _dataProvider.GetBsPosition(cellid2);
+                        double x = bsPosition1[0];
+                        double y = bsPosition1[1];
+                        double deltaX = (bsPosition2[0] - bsPosition1[0])/4;
+                        double deltaY = (bsPosition2[1] - bsPosition1[1])/4;
+                        for (int j = 0; j < 4; j++)
+                        {
+                            posiblePostion[i + j].Add(new[] {x + deltaX*j, y + deltaY*j});
+                        }
+                    }
+                    for (int i = 0; i < _dataProvider.GetTotalStep(); i++)
+                    {
+                        _resultPath.Add(GetAvgPosition(posiblePostion[i]));
+                    }
                     break;
             }
             return this;
@@ -76,7 +110,6 @@ namespace BSASimulator
         {
             circleCount = circleCount > taDictionary.Count ? taDictionary.Count : circleCount;
 
-            double[] areaSize;
             string[] cellids = taDictionary.Keys.ToArray();
 
             double marginLeft = 0;
@@ -127,5 +160,30 @@ namespace BSASimulator
 
             return vector;
         }
+
+        private double[] GetAvgPosition(List<double[]> positions)
+        {
+            int count = positions.Count;
+            double sumX = 0;
+            double sumY = 0;
+            foreach (var t in positions)
+            {
+                sumX += t[0];
+                sumY += t[1];
+            }
+            return new[] {sumX/count, sumY/count};
+        }
+
+        private void UpdateProgress(int i, int total)
+        {
+            _option.GetMainWindow()
+                .Dispatcher
+                .BeginInvoke(
+                    DispatcherPriority.Normal,
+                    new ChangeProgress(
+                        () => { _option.GetMainWindow().ProgressBar.Value = i/(double) total*1000; }));
+        }
+
+        private delegate void ChangeProgress();
     }
 }

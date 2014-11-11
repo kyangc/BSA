@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Threading;
 
 namespace BSASimulator
 {
@@ -30,9 +31,9 @@ namespace BSASimulator
             //TODO And real alocation algorithm
             switch (_option.GetSystemType())
             {
-                case Option.SystemType.CDMA2000:
+                case Option.SystemType.Cdma2000:
                     break;
-                case Option.SystemType.WCDMA:
+                case Option.SystemType.Wcdma:
                     break;
             }
             return this;
@@ -40,8 +41,21 @@ namespace BSASimulator
 
         public List<double[]> GetResultPath()
         {
+            _resultPath = new List<double[]>();
             //TODO return the allocation result
             return _resultPath;
         }
+
+        private void UpdateProgress(int i, int total)
+        {
+            _option.GetMainWindow()
+                .Dispatcher
+                .BeginInvoke(
+                    DispatcherPriority.Normal,
+                    new ChangeProgress(
+                        () => { _option.GetMainWindow().ProgressBar.Value = i/(double) total*1000; }));
+        }
+
+        private delegate void ChangeProgress();
     }
 }

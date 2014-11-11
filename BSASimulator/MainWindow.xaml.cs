@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace BSASimulator
 {
@@ -38,11 +41,16 @@ namespace BSASimulator
                 SystemTypeCdmaRadioButton,
                 SystemTypeWcdmaRadioButton
             };
+
+            ProgressBar.Minimum = 0;
+            ProgressBar.Maximum = 1000;
         }
 
         private void OnclickStart(object sender, RoutedEventArgs e)
         {
-            _options = Option.GetCustomedOption()
+            StartButton.IsEnabled = false;
+            _options = Option.GetNewOption()
+                .SetMainWindow(this)
                 .SetAvgVelocity(150)
                 .SetMapProportion(500000, 500000)
                 .SetStartPosition(0, 250000)
@@ -55,7 +63,7 @@ namespace BSASimulator
                 bool? isChecked = _simulateTypeRadioButtons[i].IsChecked;
                 if (isChecked != null && isChecked.Value)
                 {
-                    _options.SetSimulationType((Option.SimulationType) i);
+                    _options.SetAlgorithmType((Option.AlgorithmType) i);
                 }
             }
 
@@ -80,22 +88,51 @@ namespace BSASimulator
             _dataProvider = DataProvider.NewInstance()
                 .PrepareData(_options);
 
-            switch (_options.GetSimulationType())
+            switch (_options.GetAlgorithmType())
             {
-                case Option.SimulationType.RSS:
+                case Option.AlgorithmType.Rss:
+                    //TODO add RSS allocation algorithm
                     break;
-                case Option.SimulationType.TA:
-                    List<double[]> res = Ta.NewIncetance()
-                        .SetDataProvider(_dataProvider)
-                        .SetOption(_options)
-                        .StartAlgorithm()
-                        .GetResultPath();
+                case Option.AlgorithmType.Ta:
+                    var invoke = new StartAlgorithm(() =>
+                    {
+                        List<double[]> res = Ta.NewIncetance()
+                            .SetDataProvider(_dataProvider)
+                            .SetOption(_options)
+                            .StartAlgorithm()
+                            .GetResultPath();
+                        List<double> errorList = Utils.GetErrorList(
+                            Option.SystemType.Wcdma,
+                            _dataProvider.GetRealPathAll(),
+                            res);
+                        double avgError = Utils.GetErrorAnalysis(Utils.AnalysisType.Average, errorList);
+                        Utils.OutputPaths(_dataProvider.GetRealPathAll(),res,_options);
+                    });
+                    invoke.BeginInvoke(Complete, invoke);
                     break;
-                case Option.SimulationType.TDOA:
+                case Option.AlgorithmType.Tdoa:
+                    //TODO add TDOA allocation algorithm
                     break;
                 default:
                     break;
             }
         }
+
+        private void Complete(IAsyncResult ar)
+        {
+            if (ar == null) throw new ArgumentNullException("ar");
+
+            var nr = ar.AsyncState as StartAlgorithm;
+            Trace.Assert(nr != null, "Invalid object type");
+            nr.EndInvoke(ar);
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new StartAlgorithm(() =>
+            {
+                StartButton.IsEnabled = true;
+                ProgressBar.Value = 0;
+            }));
+        }
+
+        private delegate void StartAlgorithm();
     }
 }

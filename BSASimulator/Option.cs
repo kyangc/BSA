@@ -14,34 +14,33 @@ namespace BSASimulator
             Least = 2
         }
 
-        public enum SimulationType
+        public enum AlgorithmType
         {
-            TA = 0,
-            TDOA = 1,
-            TA_AOA = 2,
-            RSS = 3
+            Ta = 0,
+            Tdoa = 1,
+            TaAoa = 2,
+            Rss = 3
         }
 
         public enum SystemType
         {
-            CDMA2000 = 0,
-            WCDMA = 1
+            Cdma2000 = 0,
+            Wcdma = 1
         }
 
         private double _avgVelocity;
-
-        private BaseStationIntensity _baseStationIntensity;
-
         private double _height;
         private double _initDirection;
         private double _mapHeight;
         private double _mapWidth;
         private double _receiveRadius;
-        private SimulationType _simulationType;
         private double _startX, _startY;
+        private MainWindow _mainWindow;
         private SystemType _systemType;
+        private BaseStationIntensity _baseStationIntensity;
+        private AlgorithmType _algorithmType;
 
-        public static Option GetCustomedOption()
+        public static Option GetNewOption()
         {
             return new Option();
         }
@@ -79,9 +78,9 @@ namespace BSASimulator
             }
             switch (_systemType)
             {
-                case SystemType.CDMA2000:
+                case SystemType.Cdma2000:
                     return new double[] {2};
-                case SystemType.WCDMA:
+                case SystemType.Wcdma:
                     return new double[] {2};
                     //TODO more system support is on the way
                 default:
@@ -97,9 +96,9 @@ namespace BSASimulator
             }
             switch (_systemType)
             {
-                case SystemType.CDMA2000:
+                case SystemType.Cdma2000:
                     return 500;
-                case SystemType.WCDMA:
+                case SystemType.Wcdma:
                     return 500;
                     //TODO more system support is on the way
                 default:
@@ -107,19 +106,19 @@ namespace BSASimulator
             }
         }
 
-        public Option SetSimulationType(SimulationType simulationType)
+        public Option SetAlgorithmType(AlgorithmType algorithmType)
         {
-            _simulationType = simulationType;
+            _algorithmType = algorithmType;
             return this;
         }
 
-        public SimulationType GetSimulationType()
+        public AlgorithmType GetAlgorithmType()
         {
-            if (_simulationType == null)
+            if (_algorithmType == null)
             {
                 throw new Exception("没有初始化仿真模式");
             }
-            return _simulationType;
+            return _algorithmType;
         }
 
         public Option SetStartPosition(double x, double y)
@@ -227,6 +226,21 @@ namespace BSASimulator
                 throw new Exception("没有初始化飞行高度");
             }
             return _height;
+        }
+
+        public Option SetMainWindow(MainWindow mainWindow)
+        {
+            _mainWindow = mainWindow;
+            return this;
+        }
+
+        public MainWindow GetMainWindow()
+        {
+            if (_mainWindow == null)
+            {
+                throw new Exception("没有初始化工作窗体");
+            }
+            return _mainWindow;
         }
     }
 }
