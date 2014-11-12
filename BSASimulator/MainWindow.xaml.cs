@@ -63,7 +63,7 @@ namespace BSASimulator
                 bool? isChecked = _simulateTypeRadioButtons[i].IsChecked;
                 if (isChecked != null && isChecked.Value)
                 {
-                    _options.SetAlgorithmType((Option.AlgorithmType) i);
+                    _options.SetAlgorithmType((Option.AlgorithmType)i);
                 }
             }
 
@@ -72,7 +72,7 @@ namespace BSASimulator
                 bool? isChecked = _baseStationIntensityRadioButtons[i].IsChecked;
                 if (isChecked != null && isChecked.Value)
                 {
-                    _options.SetBsIntensity((Option.BaseStationIntensity) i);
+                    _options.SetBsIntensity((Option.BaseStationIntensity)i);
                 }
             }
 
@@ -81,7 +81,7 @@ namespace BSASimulator
                 bool? isChecked = _systemTypeRadioButtons[i].IsChecked;
                 if (isChecked != null && isChecked.Value)
                 {
-                    _options.SetSystemType((Option.SystemType) i);
+                    _options.SetSystemType((Option.SystemType)i);
                 }
             }
 
@@ -91,10 +91,24 @@ namespace BSASimulator
             switch (_options.GetAlgorithmType())
             {
                 case Option.AlgorithmType.Rss:
-                    //TODO add RSS allocation algorithm
+                    var invoke = new StartAlgorithm(() =>
+                    {
+                        List<double[]> res = Rss.NewIncetance()
+                            .SetDataProvider(_dataProvider)
+                            .SetOption(_options)
+                            .StartAlgorithm()
+                            .GetResultPath();
+                        List<double> errorList = Utils.GetErrorList(
+                            Option.SystemType.Wcdma,
+                            _dataProvider.GetRealPathAll(),
+                            res);
+                        double avgError = Utils.GetErrorAnalysis(Utils.AnalysisType.Average, errorList);
+                        Utils.OutputPaths(_dataProvider.GetRealPathAll(), res, _options);
+                    });
+                    invoke.BeginInvoke(Complete, invoke);
                     break;
                 case Option.AlgorithmType.Ta:
-                    var invoke = new StartAlgorithm(() =>
+                    invoke = () =>
                     {
                         List<double[]> res = Ta.NewIncetance()
                             .SetDataProvider(_dataProvider)
@@ -106,14 +120,12 @@ namespace BSASimulator
                             _dataProvider.GetRealPathAll(),
                             res);
                         double avgError = Utils.GetErrorAnalysis(Utils.AnalysisType.Average, errorList);
-                        Utils.OutputPaths(_dataProvider.GetRealPathAll(),res,_options);
-                    });
+                        Utils.OutputPaths(_dataProvider.GetRealPathAll(), res, _options);
+                    };
                     invoke.BeginInvoke(Complete, invoke);
                     break;
                 case Option.AlgorithmType.Tdoa:
                     //TODO add TDOA allocation algorithm
-                    break;
-                default:
                     break;
             }
         }
