@@ -35,6 +35,7 @@ namespace BSASimulator
         private double _mapWidth;
         private double _receiveRadius;
         private double _startX, _startY;
+        private bool _isUsingExternalData;
         private MainWindow _mainWindow;
         private SystemType _systemType;
         private BaseStationIntensity _baseStationIntensity;
@@ -241,6 +242,21 @@ namespace BSASimulator
                 throw new Exception("没有初始化工作窗体");
             }
             return _mainWindow;
+        }
+
+        public Option SetIsUsingExternalData(bool isUsingExternalData)
+        {
+            _isUsingExternalData = isUsingExternalData;
+            return this;
+        }
+
+        public bool GetIsUsingExternalData()
+        {
+            if (_isUsingExternalData == null)
+            {
+                throw new Exception("没有初始化是否使用外部数据");
+            }
+            return _isUsingExternalData;
         }
     }
 }

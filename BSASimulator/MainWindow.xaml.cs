@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using System.Windows.Threading;
 
 namespace BSASimulator
@@ -56,7 +57,8 @@ namespace BSASimulator
                 .SetStartPosition(0, 250000)
                 .SetInitDirection(0)
                 .SetReceiveRadius(5000)
-                .SetHeight(5000);
+                .SetHeight(5000)
+                .SetIsUsingExternalData(true);
 
             for (int i = 0; i < _simulateTypeRadioButtons.Length; i++)
             {
@@ -88,9 +90,12 @@ namespace BSASimulator
             _dataProvider = DataProvider.NewInstance()
                 .PrepareData(_options);
 
+            if (!_dataProvider.GetIsDataReady()) return;
+
             switch (_options.GetAlgorithmType())
             {
                 case Option.AlgorithmType.Rss:
+                    if (_options.GetIsUsingExternalData()) return;
                     var invoke = new StartAlgorithm(() =>
                     {
                         List<double[]> res = Rss.NewIncetance()
@@ -125,6 +130,7 @@ namespace BSASimulator
                     invoke.BeginInvoke(Complete, invoke);
                     break;
                 case Option.AlgorithmType.Tdoa:
+                    if (_options.GetIsUsingExternalData()) return;
                     invoke = () =>
                     {
                         List<double[]> res = Tdoa.NewIncetance()

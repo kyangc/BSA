@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 
 namespace BSASimulator
 {
@@ -17,6 +19,7 @@ namespace BSASimulator
         private List<double[]> _realPathList; //x,y
         private List<Dictionary<string, double>> _rssList; //cell-id,rss 
         private List<Dictionary<string, int>> _taList; //cell-id,ta
+        private Dictionary<string,double[]> _bsList;//cell-id,position 
 
         public static DataProvider NewInstance()
         {
@@ -32,28 +35,51 @@ namespace BSASimulator
             _taList = new List<Dictionary<string, int>>();
             _rssList = new List<Dictionary<string, double>>();
             _aoaList = new List<Dictionary<string, double>>();
-            int currentIntervalIndex = 0;
+            _bsList = new Dictionary<string, double[]>();
 
-            var currentMovement = new[]
+            if (_options.GetIsUsingExternalData())
             {
-                _options.GetStartPosition()[0],
-                _options.GetStartPosition()[1],
-                _options.GetInitDirection(),
-                _options.GetIntervalPattern()[currentIntervalIndex]
-            };
+                //Read datas from .csv
+                string baseInfo = Utils.ReadFileDialog("读入基站信息");
+                if (ReadBaseData(baseInfo))
+                {
+                    string testData = Utils.ReadFileDialog("读入实测数据");
+                    if (ReadTestData(testData))
+                    {
+                        _isDataReady = true;
+                        return this;
+                    }
+                }
+            }
+            else
+            {
+                //Generate data by myself
+                int currentIntervalIndex = 0;
 
-            while (
-                currentMovement[0] >= 0 &&
-                currentMovement[0] <= _options.GetMapProportion()[0] &&
-                currentMovement[1] >= 0 &&
-                currentMovement[1] <= _options.GetMapProportion()[1])
-            {
-                GetData(currentMovement);
-                currentIntervalIndex = (currentIntervalIndex + 1)%options.GetIntervalPattern().Length;
-                currentMovement = Move(currentMovement, currentIntervalIndex);
+                var currentMovement = new[]
+                {
+                    _options.GetStartPosition()[0],
+                    _options.GetStartPosition()[1],
+                    _options.GetInitDirection(),
+                    _options.GetIntervalPattern()[currentIntervalIndex]
+                };
+
+                while (
+                    currentMovement[0] >= 0 &&
+                    currentMovement[0] <= _options.GetMapProportion()[0] &&
+                    currentMovement[1] >= 0 &&
+                    currentMovement[1] <= _options.GetMapProportion()[1])
+                {
+                    GetData(currentMovement);
+                    currentIntervalIndex = (currentIntervalIndex + 1)%options.GetIntervalPattern().Length;
+                    currentMovement = Move(currentMovement, currentIntervalIndex);
+                }
+
+                _isDataReady = true;
+                return this;
             }
 
-            _isDataReady = true;
+            _isDataReady = false;
             return this;
         }
 
@@ -227,6 +253,8 @@ namespace BSASimulator
         /// <returns></returns>
         public double[] GetBsPosition(string cellId)
         {
+            if (_options.GetIsUsingExternalData()) return _bsList[cellId];
+
             int x, y;
             try
             {
@@ -249,6 +277,81 @@ namespace BSASimulator
                 throw new Exception("数据没有初始化");
             }
             return _realPathList;
+        }
+
+        private bool ReadBaseData(string storagePath)
+        {
+            //Null or empty path -> false
+            if (string.IsNullOrEmpty(storagePath)) return false;
+
+            //Reading data, if success, return true.
+            var fi = new FileInfo(storagePath.ToString(CultureInfo.InvariantCulture));
+            if (!fi.Exists) return false;
+
+            //Reading data from .csv
+            try
+            {
+                var sreader = new StreamReader(storagePath);
+                string rline;
+                while ((rline = sreader.ReadLine()) != null)
+                {
+                    if (rline.Length == 0) continue;
+                    string[] readArray = rline.Split(',');
+                    //Save base station infos
+                    _bsList.Add(readArray[0],new []
+                    {
+                        Convert.ToDouble(readArray[4]),
+                        Convert.ToDouble(readArray[5])
+                    });
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private bool ReadTestData(string storagePath)
+        {
+            //Null or empty path -> false
+            if (string.IsNullOrEmpty(storagePath)) return false;
+
+            //Reading data, if success, return true.
+            var fi = new FileInfo(storagePath.ToString(CultureInfo.InvariantCulture));
+            if (!fi.Exists) return false;
+
+            //Reading data from .csv
+            try
+            {
+                var sreader = new StreamReader(storagePath);
+                string rline;
+                while ((rline = sreader.ReadLine()) != null)
+                {
+                    if (rline.Length == 0) continue;
+                    string[] readArray = rline.Split(',');
+                    //Save real path
+                    _realPathList.Add(new []
+                    {
+                        Convert.ToDouble(readArray[3]),
+                        Convert.ToDouble(readArray[4])
+                    });
+                    //Save TA
+                    var addItem = new Dictionary<string, int>();
+                    addItem.Add(readArray[2],Convert.ToInt16(readArray[5]));
+                    _taList.Add(addItem);
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public bool GetIsDataReady()
+        {
+            return _isDataReady;
         }
     }
 }

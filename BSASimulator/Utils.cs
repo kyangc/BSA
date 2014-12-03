@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.Win32;
 
 namespace BSASimulator
 {
@@ -266,6 +267,22 @@ namespace BSASimulator
                 default:
                     return -1;
             }
+        }
+
+        /// <summary>
+        /// Show load file dialog
+        /// </summary>
+        /// <param name="title">dialog title</param>
+        /// <returns></returns>
+        public static string ReadFileDialog(string title)
+        {
+            var ofd = new System.Windows.Forms.OpenFileDialog
+            {
+                Filter = "CSV文件|*.csv",
+                Title = title,
+            };
+            if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK || ofd.FileName.Length == 0) return null;
+            return ofd.FileName;
         }
     }
 }

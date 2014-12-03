@@ -5,7 +5,7 @@ using System.Windows.Threading;
 namespace BSASimulator
 {
     /// <summary>
-    /// @Author Chengkangyang @11/11/14
+    ///     @Author Chengkangyang @11/11/14
     /// </summary>
     internal class Ta
     {
@@ -76,7 +76,8 @@ namespace BSASimulator
                         string cellid2 = _dataProvider.GetTaAt(i + 3).Keys.ToArray()[0];
                         if (
                             !_dataProvider.GetTaAt(i).Keys.ToArray()[0].Equals(
-                                _dataProvider.GetTaAt(i + 3).Keys.ToArray()[0]))
+                                _dataProvider.GetTaAt(i + 3).Keys.ToArray()[0]) &&
+                            !_option.GetIsUsingExternalData())
                         {
                             cellid2 = _dataProvider.GetTaAt(i + 3).Keys.ToArray()[1];
                         }
