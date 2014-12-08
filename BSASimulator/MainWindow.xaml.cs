@@ -52,13 +52,13 @@ namespace BSASimulator
             StartButton.IsEnabled = false;
             _options = Option.GetNewOption()
                 .SetMainWindow(this)
-                .SetAvgVelocity(150)
+                .SetAvgVelocity(200)
                 .SetMapProportion(500000, 500000)
                 .SetStartPosition(0, 250000)
                 .SetInitDirection(0)
                 .SetReceiveRadius(5000)
                 .SetHeight(5000)
-                .SetIsUsingExternalData(true);
+                .SetIsUsingExternalData(false);
 
             for (int i = 0; i < _simulateTypeRadioButtons.Length; i++)
             {

@@ -10,8 +10,8 @@ namespace BSASimulator
     /// </summary>
     internal class DataProvider
     {
-        private readonly int[] _offsetX = {1, 0, 0, -1, -1, -1};
-        private readonly int[] _offsetY = {0, -1, 1, 0, -1, 1};
+        private readonly int[] _offsetX = { 1, 0, 0, -1, -1, -1 };
+        private readonly int[] _offsetY = { 0, -1, 1, 0, -1, 1 };
         private List<Dictionary<string, double>> _aoaList; //cell-id,aoa 
         private List<double> _fetchDataInterval;
         private bool _isDataReady;
@@ -19,7 +19,7 @@ namespace BSASimulator
         private List<double[]> _realPathList; //x,y
         private List<Dictionary<string, double>> _rssList; //cell-id,rss 
         private List<Dictionary<string, int>> _taList; //cell-id,ta
-        private Dictionary<string,double[]> _bsList;//cell-id,position 
+        private Dictionary<string, double[]> _bsList;//cell-id,position 
 
         public static DataProvider NewInstance()
         {
@@ -71,7 +71,7 @@ namespace BSASimulator
                     currentMovement[1] <= _options.GetMapProportion()[1])
                 {
                     GetData(currentMovement);
-                    currentIntervalIndex = (currentIntervalIndex + 1)%options.GetIntervalPattern().Length;
+                    currentIntervalIndex = (currentIntervalIndex + 1) % options.GetIntervalPattern().Length;
                     currentMovement = Move(currentMovement, currentIntervalIndex);
                 }
 
@@ -85,19 +85,22 @@ namespace BSASimulator
 
         private double[] Move(double[] currentMovement, int currentIntervalIndex)
         {
-            double newDirection = Utils.GetBiasedAngle(currentMovement[2])/180*Math.PI;
-            double fetchDataInterval = Utils.GetBiasedValue(_options.GetIntervalPattern()[currentIntervalIndex]);
-            double moveDistance = fetchDataInterval*Utils.GetBiasedValue(_options.GetAvgVelocity());
-            double nowX = currentMovement[0] + moveDistance*Math.Cos(newDirection);
-            double nowY = currentMovement[1] + moveDistance*Math.Sin(newDirection);
-            return new[] {nowX, nowY, newDirection, fetchDataInterval};
+            double newDirection = Utils.GetBiasedAngle(currentMovement[2]) / 180 * Math.PI;
+            double fetchDataInterval = Utils.GetBiasedValue(
+                Utils.GetAvgIntervalBasedOnVelocity(
+                _options.GetIntervalPattern()[currentIntervalIndex],
+                _options.GetAvgVelocity()));
+            double moveDistance = fetchDataInterval * Utils.GetBiasedValue(_options.GetAvgVelocity());
+            double nowX = currentMovement[0] + moveDistance * Math.Cos(newDirection);
+            double nowY = currentMovement[1] + moveDistance * Math.Sin(newDirection);
+            return new[] { nowX, nowY, newDirection, fetchDataInterval };
         }
 
         private void GetData(double[] currentMovement)
         {
             //Save the fetch data interval and current real position
             _fetchDataInterval.Add(currentMovement[3]);
-            _realPathList.Add(new[] {currentMovement[0], currentMovement[1]});
+            _realPathList.Add(new[] { currentMovement[0], currentMovement[1] });
 
             //Get the region length
             double regionLength = _options.GetBsIntencity();
@@ -110,10 +113,10 @@ namespace BSASimulator
 
             //Get the current region index
             int currentIndexX;
-            var currentIndexY = (int) Math.Ceiling(currentMovement[1]/regionLength);
-            if (currentIndexY%2 == 0)
-                currentIndexX = (int) Math.Ceiling((currentMovement[0] + regionLength*0.5)/regionLength);
-            else currentIndexX = (int) Math.Ceiling(currentMovement[0]/regionLength);
+            var currentIndexY = (int)Math.Ceiling(currentMovement[1] / regionLength);
+            if (currentIndexY % 2 == 0)
+                currentIndexX = (int)Math.Ceiling((currentMovement[0] + regionLength * 0.5) / regionLength);
+            else currentIndexX = (int)Math.Ceiling(currentMovement[0] / regionLength);
 
             //Get the base stations' cell ids and add it to fetching list
             string cellId = currentIndexX + "," + currentIndexY;
@@ -298,7 +301,7 @@ namespace BSASimulator
                     if (rline.Length == 0) continue;
                     string[] readArray = rline.Split(',');
                     //Save base station infos
-                    _bsList.Add(readArray[0],new []
+                    _bsList.Add(readArray[0], new[]
                     {
                         Convert.ToDouble(readArray[4]),
                         Convert.ToDouble(readArray[5])
@@ -331,14 +334,14 @@ namespace BSASimulator
                     if (rline.Length == 0) continue;
                     string[] readArray = rline.Split(',');
                     //Save real path
-                    _realPathList.Add(new []
+                    _realPathList.Add(new[]
                     {
                         Convert.ToDouble(readArray[3]),
                         Convert.ToDouble(readArray[4])
                     });
                     //Save TA
                     var addItem = new Dictionary<string, int>();
-                    addItem.Add(readArray[2],Convert.ToInt16(readArray[5]));
+                    addItem.Add(readArray[2], Convert.ToInt16(readArray[5]));
                     _taList.Add(addItem);
                 }
             }

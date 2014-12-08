@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.Win32;
+using System.Windows.Forms;
 
 namespace BSASimulator
 {
@@ -251,7 +251,7 @@ namespace BSASimulator
         }
 
         /// <summary>
-        /// Return the error analysis of the given analysis type
+        ///     Return the error analysis of the given analysis type
         /// </summary>
         /// <param name="analysisType"></param>
         /// <param name="errorList"></param>
@@ -270,19 +270,55 @@ namespace BSASimulator
         }
 
         /// <summary>
-        /// Show load file dialog
+        ///     Show load file dialog
         /// </summary>
         /// <param name="title">dialog title</param>
         /// <returns></returns>
         public static string ReadFileDialog(string title)
         {
-            var ofd = new System.Windows.Forms.OpenFileDialog
+            var ofd = new OpenFileDialog
             {
                 Filter = "CSV文件|*.csv",
                 Title = title,
             };
-            if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK || ofd.FileName.Length == 0) return null;
+            if (ofd.ShowDialog() != DialogResult.OK || ofd.FileName.Length == 0) return null;
             return ofd.FileName;
+        }
+
+        /// <summary>
+        ///    Get avgInterval based on velocity
+        /// </summary>
+        /// <param name="avgInterval"></param>
+        /// <param name="currentVelocity"></param>
+        /// <returns></returns>
+        public static double GetAvgIntervalBasedOnVelocity(double avgInterval, double currentVelocity)
+        {
+            double lowestSpeedLosePackageRatio = 0;
+            double HighestSpeedLosePackageRatio = 0.8;
+            double lowSpeed = 50;
+            double HighSpeed = 250;
+            double currentRatio;
+            if (currentVelocity <= lowSpeed)
+            {
+                currentRatio = lowestSpeedLosePackageRatio;
+            }
+            else if (currentVelocity >= HighSpeed)
+            {
+                currentRatio = HighestSpeedLosePackageRatio;
+            }
+            else
+            {
+                currentRatio = (HighestSpeedLosePackageRatio - lowestSpeedLosePackageRatio)
+                                  * (currentVelocity - lowSpeed) /
+                                  (HighSpeed - lowSpeed) + lowestSpeedLosePackageRatio;
+            }
+            Random random = new Random();
+            double currentInterval = avgInterval;
+            while (random.NextDouble() < currentRatio)
+            {
+                currentInterval += GetBiasedValue(avgInterval);
+            }
+            return currentInterval;
         }
     }
 }
